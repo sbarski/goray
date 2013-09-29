@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	_ "goray/vector"
+	_ "goray/geometry"
 	"log"
 	"net/http"
 	"strconv"
@@ -19,12 +19,19 @@ func runRayTracer(w http.ResponseWriter, r *http.Request) {
  */
 func main() {
 	port := flag.Int("port", 9223, "Required port number")
+	out := flag.String("output", "ppm", "Required outpyut must be defined")
 	flag.Parse()
 
-	http.HandleFunc("/", runRayTracer)
-	err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
+	switch *out {
+	case "ppm":
+		break
+	case "web":
+		http.HandleFunc("/", runRayTracer)
+		err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
 
-	if err != nil {
-		log.Fatal("Could not run web server: ", err)
+		if err != nil {
+			log.Fatal("Could not run web server: ", err)
+		}
 	}
+
 }
